@@ -1,7 +1,6 @@
 {
-  "type": "module",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "ts-node-dev app.ts"
   },
   "dependencies": {
     "@koa/router": "^10.1.1",
@@ -13,6 +12,13 @@
     "socket.io": "^4.4.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "@types/koa": "^2.13.4",
+    "@types/koa__router": "^8.0.9",
+    "@types/koa-bodyparser": "^4.3.4",
+    "@types/koa-send": "^4.1.3",
+    "@types/koa-session": "^5.10.4",
+    "ts-node": "^10.4.0",
+    "ts-node-dev": "^1.1.8",
+    "typescript": "^4.5.2"
   }
 }
