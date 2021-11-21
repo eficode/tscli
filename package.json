@@ -1,0 +1,60 @@
+{
+  "name": "@eficode/tscli",
+  "version": "0.0.1",
+  "author": "Marko Klemetti",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eficode/tscli"
+  },
+  "keywords": ["Timesheets", "Eficode"],
+  "main": "lib/index.js",
+  "bin": {
+    "tscli": "lib/cli.js"
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "scripts": {
+    "prepare" : "npm run build",
+    "prepublishOnly" : "npm test && npm run lint",
+    "preversion" : "npm run lint",
+    "build": "tsc",
+    "release": "./node_modules/.bin/standard-version && git push --follow-tags",
+    "test": "jest",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "tslint -p tsconfig.json"
+  },
+  "jest": {
+    "preset": "ts-jest/presets/default",
+    "testMatch": [
+      "**/**/*.test.ts"
+    ],
+    "setupFiles": [
+      "./test/setup.ts"
+    ]
+  },
+  "dependencies": {
+    "dayjs": "^1.10.7",
+    "googleapis": "^91.0.0",
+    "jsonpath": "^1.1.1",
+    "node-fetch": "^2.6.1",
+    "open": "^8.4.0",
+    "socket.io-client": "^4.4.0",
+    "yargs": "^17.2.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.3",
+    "@types/jsonpath": "^0.2.0",
+    "@types/node-fetch": "^2.5.10",
+    "@types/yargs": "^17.0.7",
+    "jest": "^27.3.1",
+    "prettier": "^2.4.1",
+    "standard-version": "^9.3.2",
+    "ts-jest": "^27.0.7",
+    "ts-node": "^10.4.0",
+    "tslint": "^6.1.3",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^4.5.2"
+  }
+}
