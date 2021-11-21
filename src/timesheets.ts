@@ -59,17 +59,17 @@ export const listWeek = async () => {
   const worktimes = await getWorktimes();
   const phases = await getCurrentPhases();
 
-  let phasesForDays = phases.map(phase => {
-    let hash: { [name: string]: string } = { 'Name': phase.name };
+  const phasesForDays = phases.map(phase => {
+    const phaseWeek: { [name: string]: string } = { 'Name': phase.name };
     weekdays.forEach(day => {
       const worktime = worktimes.find((w: any) => (w.date === day.date && w.phaseId === phase.id));
       if (worktime) {
-        hash[day.name] = worktime.duration || 0;
+        phaseWeek[day.name] = worktime.duration || 0;
       } else {
-        hash[day.name] = '';
+        phaseWeek[day.name] = '';
       }
     });
-    return hash;
+    return phaseWeek;
   });
 
   printTable(phasesForDays);
