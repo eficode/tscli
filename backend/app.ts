@@ -14,6 +14,8 @@ const oauth2Client = new google.auth.OAuth2(
   'http://localhost:8000/login'
 );
 
+const port = process.env.PORT || 8000;
+
 const CONFIG = {
   key: 'app.session',
   maxAge: 86400000,
@@ -28,7 +30,7 @@ app.keys = ['secret'];
 app.use(bodyParser());
 app.use(session(CONFIG, app));
 
-const googleAuth = async (ctx) => {
+const googleAuth = async (ctx: any) => {
   const { code, state } = ctx.query;
 
   if (!code || !state) {
@@ -47,12 +49,12 @@ const googleAuth = async (ctx) => {
   await send(ctx, 'index.html');
 };
 
-app.use(async (ctx, next) => {
+app.use(async (ctx: any, next) => {
   const { state } = ctx.query;
 
   try {
     await next();
-  } catch (err) {
+  } catch (err: any) {
     console.log(err);
     ctx.status = err.statusCode || err.status || 500;
     await send(ctx, '404.html');
@@ -69,7 +71,7 @@ publicRouter.get('/login', googleAuth);
 app.use(publicRouter.routes());
 app.use(publicRouter.allowedMethods());
 
-const requireSession = async (ctx, next) => {
+const requireSession = async (ctx: any, next: any) => {
   if (!ctx.session.user) {
     throw new Error('user missing');
   }
@@ -80,13 +82,15 @@ const privateRouter = new Router();
 
 privateRouter.use(requireSession);
 
-privateRouter.get('/', (ctx, next) => {
+privateRouter.get('/', (ctx: any) => {
   ctx.body = { data: { user: ctx.session.user }};
 });
 
 app.use(privateRouter.routes());
 app.use(privateRouter.allowedMethods());
 
-const server = app.listen(process.env.PORT || 8000);
+const server = app.listen(port);
 
 io.attach(server);
+
+console.log(`App listening on port ${port}`);

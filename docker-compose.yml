@@ -3,5 +3,10 @@ version: '3'
 services:
   backend:
     build: backend
+    environment:
+      - GOOGLE_CLIENT_ID
+      - GOOGLE_CLIENT_SECRET
     ports:
       - 8000:8000
+    volumes:
+      - ./backend/src:/app/src
