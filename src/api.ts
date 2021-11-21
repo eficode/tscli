@@ -38,3 +38,20 @@ export const post = async (url: string, params: any) => {
 
   return response.json();
 };
+
+export const put = async (url: string, params: any) => {
+  const cookie = await getSessionCookie();
+
+  const headers = {
+    cookie,
+    'content-Type': 'application/json;charset=UTF-8',
+  };
+
+  const response = await fetch(`${ENDPOINT}/${url}`, {
+    headers,
+    method: 'PUT',
+    body: JSON.stringify(params),
+  });
+
+  return response.json();
+};

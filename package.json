@@ -7,7 +7,10 @@
     "type": "git",
     "url": "https://github.com/eficode/tscli"
   },
-  "keywords": ["Timesheets", "Eficode"],
+  "keywords": [
+    "Timesheets",
+    "Eficode"
+  ],
   "main": "lib/index.js",
   "bin": {
     "tscli": "lib/cli.js"
@@ -16,9 +19,9 @@
     "lib/**/*"
   ],
   "scripts": {
-    "prepare" : "npm run build",
-    "prepublishOnly" : "npm test && npm run lint",
-    "preversion" : "npm run lint",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
     "build": "tsc",
     "release": "./node_modules/.bin/standard-version && git push --follow-tags",
     "test": "jest",
@@ -35,6 +38,7 @@
     ]
   },
   "dependencies": {
+    "console-table-printer": "^2.10.0",
     "dayjs": "^1.10.7",
     "googleapis": "^91.0.0",
     "jsonpath": "^1.1.1",
