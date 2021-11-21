@@ -1,8 +1,11 @@
 import dayjs from 'dayjs';
+import isoWeek from 'dayjs/plugin/isoWeek';
 
 export const getWeekdays = (date = dayjs()) => {
-  const firstDay = dayjs(date).startOf('week');
-  const lastDay = dayjs(date).endOf('week');
+  dayjs.extend(isoWeek);
+
+  const firstDay = dayjs(date).startOf('isoWeek');
+  const lastDay = dayjs(date).endOf('isoWeek');
 
   return Array.from(Array(lastDay.diff(firstDay, 'day') + 1).keys()).map(i => ({
     date: firstDay.add(i, 'day').format('YYYY-MM-DD'),
