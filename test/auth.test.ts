@@ -38,7 +38,9 @@ describe('Auth', () => {
       expect(await getSessionCookie()).toBe('sessionCookie=working-session-key');
     });
     it('should get a new cookie if current cookie fails', async () => {
-      mocked(existsSync as jest.Mock).mockReturnValueOnce(true).mockReturnValueOnce(false);
+      mocked(existsSync as jest.Mock)
+        .mockReturnValueOnce(true)
+        .mockReturnValueOnce(false);
 
       expect(await getSessionCookie()).toBe('sessionCookie=new-session-key');
     });

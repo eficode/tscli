@@ -4,7 +4,4 @@ const promises = {
   writeFile: jest.fn(),
 };
 
-export {
-  existsSync,
-  promises
-}
+export { existsSync, promises };

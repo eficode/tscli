@@ -5,12 +5,14 @@ import { getCurrentPhases } from '../src/phases';
 
 import * as testData from './data/phases.json';
 
-jest.mock('../src/api')
+jest.mock('../src/api');
 
 describe('Phases', () => {
   describe('get current phases', () => {
     it('should return empty array if there are no favorites', async () => {
-      const CURRENT_PHASES = [{id: 3448, name: 'Transformation Work Group (Internal)', projectName: 'Transformation Work Group (Internal)'}];
+      const CURRENT_PHASES = [
+        { id: 3448, name: 'Transformation Work Group (Internal)', projectName: 'Transformation Work Group (Internal)' },
+      ];
 
       mocked(get as jest.Mock)
         .mockResolvedValueOnce(testData.projects)
@@ -18,7 +20,6 @@ describe('Phases', () => {
 
       expect(await getCurrentPhases()).toStrictEqual(CURRENT_PHASES);
     });
-    it('should return favorite phases with projects', async () => {
-    });
+    it('should return favorite phases with projects', async () => {});
   });
 });
