@@ -1,28 +1,64 @@
-import { google } from 'googleapis';
-import open from 'open';
+import * as os from 'os';
+import { existsSync, promises as fs } from 'fs';
 
-import io from 'socket.io-client';
+import { getCookies } from 'chrome-cookies-secure';
 
-import { promises as fs } from 'fs';
+import { testAuth } from './api';
 
-const openAuthUrl = (id: string) => {
-  const oauth2Client = new google.auth.OAuth2(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-    'http://localhost:8000/login',
-  );
+const createSessionDirectoryIfMissing = async () => {
+  const dir = `${os.homedir()}/.tscli`;
 
-  const url = oauth2Client.generateAuthUrl({
-    access_type: 'offline',
-    scope: ['https://www.googleapis.com/auth/userinfo.email'],
-  });
+  if (!existsSync(dir)) {
+    await fs.mkdir(dir);
+  }
 
-  open(`${url}&state=${id}`);
+  return dir;
 };
 
+const testCurrentSession = async (cookies: string) => {
+  try {
+    await testAuth(cookies);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+const getCurrentCookieFrom = async (filename: string) => {
+  if (existsSync(filename)) {
+    const content = await fs.readFile(filename, 'utf8');
+    return (content.match(/(^.*)/) || [])[1] || '';
+  }
+
+  return null;
+}
+
+const collectAndSaveCookieTo = async (filename: string) => {
+  const cookies: any = await new Promise((resolve, reject) => {
+    getCookies('https://timesheets.eficode.fi/api/employees/me', (err: any, data: any) => {
+      err ? reject(err) : resolve(data);
+    });
+  });
+
+  const content = Object.keys(cookies).map((key) => `${key}=${cookies[key]}`).join('; ');
+
+  await fs.writeFile(filename, content);
+
+  return content;
+}
+
 export const getSessionCookie = async () => {
-  const content = await fs.readFile('.session', 'utf8');
-  return (content.match(/(^.*)/) || [])[1] || '';
+  const sessionDir = await createSessionDirectoryIfMissing();
+  const sessionFile = `${sessionDir}/.session`;
+
+  const cookie = await getCurrentCookieFrom(sessionFile);
+  if (cookie) {
+    if (await testCurrentSession(cookie)) {
+      return cookie;
+    }
+  }
+
+  return collectAndSaveCookieTo(sessionFile);
 };
 
 export const loggedIn = async () => {
@@ -35,22 +71,4 @@ export const loggedIn = async () => {
   } catch (err) {} // tslint:disable-line:no-empty
 
   return false;
-};
-
-export const login = async () => {
-  const socket = io('http://localhost:8000');
-
-  socket.on('connect', () => {
-    openAuthUrl(socket.id);
-  });
-
-  socket.on('token', async (token) => {
-    await fs.writeFile('.session', token);
-
-    process.exit();
-  });
-
-  socket.on('error', (err) => {
-    process.exit(1);
-  });
 };

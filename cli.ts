@@ -3,7 +3,6 @@
 import yargs from 'yargs';
 
 import { listWeek, listPhases, createWorktime } from './src/timesheets';
-import { login } from './src/auth';
 
 const args = yargs(process.argv.slice(2))
   .usage('Usage: npx @eficode/tscli [options]')
@@ -17,9 +16,6 @@ const args = yargs(process.argv.slice(2))
   )
   .command('create <id> <duration> [date] [description]', 'mark hours for task', {},
     createWorktime
-  )
-  .command('login', 'open browser for login', {},
-    login
   )
   .demandCommand()
   .alias('h', 'help')

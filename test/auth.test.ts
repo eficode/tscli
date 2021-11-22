@@ -2,6 +2,7 @@ import { loggedIn } from '../src/auth';
 
 jest.mock('fs', () => ({
   readFile: jest.fn().mockResolvedValue(''),
+  existsSync: jest.fn().mockResolvedValue(true),
 }));
 
 describe('Auth', () => {
