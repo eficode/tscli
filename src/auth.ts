@@ -3,7 +3,11 @@ import open from 'open';
 
 import io from 'socket.io-client';
 
-import { promises as fs } from 'fs';
+import { getCookies } from 'chrome-cookies-secure';
+
+import * as os from 'os';
+import { existsSync, promises as fs } from 'fs';
+import { drive } from 'googleapis/build/src/apis/drive';
 
 const openAuthUrl = (id: string) => {
   const oauth2Client = new google.auth.OAuth2(
@@ -20,9 +24,38 @@ const openAuthUrl = (id: string) => {
   open(`${url}&state=${id}`);
 };
 
+const createSessionDirectoryIfMissing = async () => {
+  const dir = `${os.homedir()}/.tscli`;
+
+  if (!existsSync(dir)) {
+    await fs.mkdir(dir);
+  }
+
+  return dir;
+};
+
 export const getSessionCookie = async () => {
-  const content = await fs.readFile('.session', 'utf8');
-  return (content.match(/(^.*)/) || [])[1] || '';
+  const sessionDir = await createSessionDirectoryIfMissing();
+  const sessionFile = `${sessionDir}/.session`;
+
+  if (existsSync(sessionFile)) {
+    const content = await fs.readFile(sessionFile, 'utf8');
+    return (content.match(/(^.*)/) || [])[1] || '';
+  }
+
+  const cookies: any = await new Promise((resolve, reject) => {
+    getCookies('https://timesheets.eficode.fi/api/employees/me', (err: any, cookies: any) => {
+      err ? reject(err) : resolve(cookies);
+    });
+  });
+
+  const content = Object.keys(cookies).map((key) => `${key}=${cookies[key]}`).join('; ');
+
+  console.log(content);
+
+  await fs.writeFile(sessionFile, content);
+
+  return content;
 };
 
 export const loggedIn = async () => {
