@@ -3,7 +3,7 @@ import { existsSync, promises as fs } from 'fs';
 
 import { getCookies } from 'chrome-cookies-secure';
 
-import { get } from './api';
+import { testAuth } from './api';
 
 const createSessionDirectoryIfMissing = async () => {
   const dir = `${os.homedir()}/.tscli`;
@@ -17,9 +17,9 @@ const createSessionDirectoryIfMissing = async () => {
 
 const testCurrentSession = async (cookies: string) => {
   try {
-    await get('employees/me');
+    await testAuth(cookies);
     return true;
-  } catch {
+  } catch (err) {
     return false;
   }
 }

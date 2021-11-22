@@ -4,9 +4,7 @@ import { getSessionCookie } from './auth';
 
 const ENDPOINT = process.env.ENDPOINT || 'https://timesheets.eficode.fi/api';
 
-export const getUser = async () => {
-  const cookie = await getSessionCookie();
-
+export const testAuth = async (cookie: string) => {
   const opts = { headers: { cookie } };
 
   const response = await fetch(`${ENDPOINT}/me`, opts);
