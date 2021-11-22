@@ -31,7 +31,11 @@ const getWorktimes = async (dt?: string) => {
   const weekly = await get(`worktimes/weekly?year=${date.format('YYYY')}&week=${date.isoWeek()}`);
 
   return weekly.worktimes.map((w: any) => ({
-    id: w.id, phaseId: w.task.phaseId, taskId: w.taskId, date: w.date, duration: w.duration,
+    id: w.id,
+    phaseId: w.task.phaseId,
+    taskId: w.taskId,
+    date: w.date,
+    duration: w.duration,
   }));
 };
 
@@ -50,7 +54,7 @@ const getDefaultTaskFor = async (phaseId: string) => {
 export const listPhases = async () => {
   const phases = await getCurrentPhases();
 
-  printTable(phases.map((p) => ({id: p.id, name: p.name})));
+  printTable(phases.map((p) => ({ id: p.id, name: p.name })));
 };
 
 export const listWeek = async () => {
@@ -59,12 +63,12 @@ export const listWeek = async () => {
   const worktimes = await getWorktimes();
   const phases = await getCurrentPhases();
 
-  const phasesForDays = phases.map(phase => {
-    const phaseWeek: { [name: string]: string } = { 'Name': phase.name };
-    weekdays.forEach(day => {
-      const worktime = worktimes.find((w: any) => (w.date === day.date && w.phaseId === phase.id));
+  const phasesForDays = phases.map((phase) => {
+    const phaseWeek: { [name: string]: string } = { Name: phase.name };
+    weekdays.forEach((day) => {
+      const worktime = worktimes.find((w: any) => w.date === day.date && w.phaseId === phase.id);
       if (worktime) {
-        phaseWeek[day.name] = worktime.duration || 0;
+        phaseWeek[day.name] = worktime.duration || 0;
       } else {
         phaseWeek[day.name] = '';
       }
@@ -81,7 +85,7 @@ export const createWorktime = async (argv: any) => {
 
   const worktimes = await getWorktimes(argv.date);
 
-  const worktime = worktimes.find((w: any) => (w.date === date && w.phaseId === argv.id));
+  const worktime = worktimes.find((w: any) => w.date === date && w.phaseId === argv.id);
 
   if (!date || !task.id) {
     console.log('Creating worktime failed. Please check your parameters.');
@@ -99,7 +103,6 @@ export const createWorktime = async (argv: any) => {
       });
 
       console.log(`Updated worktime for ${date}`);
-
     } else {
       await post('worktimes', {
         date,

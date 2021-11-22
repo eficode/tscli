@@ -7,7 +7,6 @@ jest.mock('fs', () => ({
 
 describe('Auth', () => {
   describe('logged in', () => {
-
     it('should return false if .session is not set', async () => {
       await expect(loggedIn()).resolves.toBe(false);
     });

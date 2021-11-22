@@ -22,7 +22,7 @@ const testCurrentSession = async (cookies: string) => {
   } catch (err) {
     return false;
   }
-}
+};
 
 const getCurrentCookieFrom = async (filename: string) => {
   if (existsSync(filename)) {
@@ -31,7 +31,7 @@ const getCurrentCookieFrom = async (filename: string) => {
   }
 
   return null;
-}
+};
 
 const collectAndSaveCookieTo = async (filename: string) => {
   const cookies: any = await new Promise((resolve, reject) => {
@@ -40,12 +40,14 @@ const collectAndSaveCookieTo = async (filename: string) => {
     });
   });
 
-  const content = Object.keys(cookies).map((key) => `${key}=${cookies[key]}`).join('; ');
+  const content = Object.keys(cookies)
+    .map((key) => `${key}=${cookies[key]}`)
+    .join('; ');
 
   await fs.writeFile(filename, content);
 
   return content;
-}
+};
 
 export const getSessionCookie = async () => {
   const sessionDir = await createSessionDirectoryIfMissing();
