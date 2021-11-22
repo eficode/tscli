@@ -5,7 +5,7 @@ import yargs from 'yargs';
 import { listWeek, listPhases, createWorktime } from './src/timesheets';
 import { login } from './src/auth';
 
-const args = yargs(process.argv.slice(2))
+yargs(process.argv.slice(2))
   .usage('Usage: npx @eficode/tscli [options]')
   .example('npx @eficode/tscli -l', 'show current hours')
   .help('h')
