@@ -1,9 +1,8 @@
 import * as os from 'os';
 import { existsSync, promises as fs } from 'fs';
 
-import { getCookies } from 'chrome-cookies-secure';
-
 import { testAuth } from './api';
+import { getCookiesFromBrowser } from './cookies';
 
 const createSessionDirectoryIfMissing = async () => {
   const dir = `${os.homedir()}/.tscli`;
@@ -24,9 +23,10 @@ const testCurrentSession = async (cookies: string) => {
   }
 };
 
-const getCurrentCookieFrom = async (filename: string) => {
+export const getCurrentCookieFrom = async (filename: string) => {
   if (existsSync(filename)) {
     const content = await fs.readFile(filename, 'utf8');
+
     return (content.match(/(^.*)/) || [])[1] || '';
   }
 
@@ -34,11 +34,7 @@ const getCurrentCookieFrom = async (filename: string) => {
 };
 
 const collectAndSaveCookieTo = async (filename: string) => {
-  const cookies: any = await new Promise((resolve, reject) => {
-    getCookies('https://timesheets.eficode.fi/api/employees/me', (err: any, data: any) => {
-      err ? reject(err) : resolve(data);
-    });
-  });
+  const cookies: any = await getCookiesFromBrowser();
 
   const content = Object.keys(cookies)
     .map((key) => `${key}=${cookies[key]}`)
@@ -54,6 +50,7 @@ export const getSessionCookie = async () => {
   const sessionFile = `${sessionDir}/.session`;
 
   const cookie = await getCurrentCookieFrom(sessionFile);
+
   if (cookie) {
     if (await testCurrentSession(cookie)) {
       return cookie;
@@ -61,16 +58,4 @@ export const getSessionCookie = async () => {
   }
 
   return collectAndSaveCookieTo(sessionFile);
-};
-
-export const loggedIn = async () => {
-  try {
-    const session: string = await getSessionCookie();
-
-    if (session) {
-      return true;
-    }
-  } catch (err) {} // tslint:disable-line:no-empty
-
-  return false;
 };

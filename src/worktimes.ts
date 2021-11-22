@@ -6,23 +6,8 @@ import jsonpath from 'jsonpath';
 import { printTable } from 'console-table-printer';
 
 import { get, post, put } from './api';
+import { getCurrentPhases } from './phases';
 import { getWeekdays } from './utils';
-
-const getCurrentPhases = async () => {
-  const projects = await get('projects?active=true&userHasAccess=true');
-  const favorites: any = await get('preferences/favoritePhases');
-
-  const currentPhases = jsonpath.query(
-    projects,
-    `$..phases[?(${favorites.favoritePhases.map((p: number) => `@.id == ${p}`).join('||')})]`,
-  );
-  /*
-  const currentProjects = projects.filter((project) => {
-    return project.phases.find(phase => favorites.favoritePhases.includes(phase.id));
-  });
-  */
-  return currentPhases;
-};
 
 const getWorktimes = async (dt?: string) => {
   dayjs.extend(isoWeek);
@@ -51,20 +36,14 @@ const getDefaultTaskFor = async (phaseId: string) => {
   return {};
 };
 
-export const listPhases = async () => {
-  const phases = await getCurrentPhases();
-
-  printTable(phases.map((p) => ({ id: p.id, name: p.name })));
-};
-
 export const listWeek = async () => {
   const weekdays = getWeekdays();
 
   const worktimes = await getWorktimes();
   const phases = await getCurrentPhases();
 
-  const phasesForDays = phases.map((phase) => {
-    const phaseWeek: { [name: string]: string } = { Name: phase.name };
+  const phasesForDays = phases.map((phase: any) => {
+    const phaseWeek: { [name: string]: string } = { Name: (phase.projectName === phase.name ? phase.name : `${phase.projectName} (${phase.name})`) };
     weekdays.forEach((day) => {
       const worktime = worktimes.find((w: any) => w.date === day.date && w.phaseId === phase.id);
       if (worktime) {

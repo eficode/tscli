@@ -2,7 +2,8 @@
 
 import yargs from 'yargs';
 
-import { listWeek, listPhases, createWorktime } from './src/timesheets';
+import { listPhases } from './src/phases';
+import { listWeek, createWorktime } from './src/worktimes';
 
 const args = yargs(process.argv.slice(2))
   .usage('Usage: npx @eficode/tscli [options]')
