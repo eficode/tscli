@@ -5,12 +5,10 @@ import { get } from './api';
 export const getCurrentPhases = async () => {
   const projects = await get('projects?active=true&userHasAccess=true');
   const favorites: any = await get('preferences/favoritePhases');
-  /*
-  const currentPhases = jsonpath.query(
-    projects,
-    `$..phases[?(${favorites.favoritePhases.map((p: number) => `@.id == ${p}`).join('||')})]`,
-  );
-*/
+
+  console.log(projects);
+  console.log(favorites);
+
   const currentPhases = projects
     .map((project: any) => {
       const phases = project.phases
