@@ -2,12 +2,12 @@ import { printTable } from 'console-table-printer';
 
 import { get } from './api';
 
-export const findPhases = async (id: string) => {
+export const findPhases = async (id: number) => {
   const projects = await get('projects?active=true&userHasAccess=true');
 
   const phases = projects
     .map((project: any) => {
-      const filteredPhases = project.phases.filter((phase: any) => id === phase.id.toString());
+      const filteredPhases = project.phases.filter((phase: any) => id === phase.id);
 
       if (filteredPhases) {
         return filteredPhases.map((phase: any) => ({ id: phase.id, name: phase.name, projectName: project.name }));

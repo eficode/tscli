@@ -14,7 +14,7 @@ const args = yargs(process.argv.slice(2))
   .command('tasks', 'Get current tasks', {}, listPhases)
   .command('hours <id> <duration> [date] [description]', 'mark hours for task', {}, createWorktime)
   .command('find <name>', 'find project and tasks by name', {}, findProjectsAndTasks)
-  .command('favorites <action> <id>', 'add / remove a favorite', {}, changeFavorite)
+  .command('favorites <action> <id>', 'add / rm a favorite', {}, changeFavorite)
   .demandCommand()
   .alias('h', 'help')
   .alias('v', 'version').argv;

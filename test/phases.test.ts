@@ -9,12 +9,12 @@ jest.mock('../src/api');
 
 describe('Phases', () => {
   describe('find phases', () => {
-    it('should return empty array if there are no favorites', async () => {
+    it('should return phases by id', async () => {
       mocked(get as jest.Mock).mockResolvedValueOnce(testData.projects);
 
       const phases = [{ id: 3870, name: 'Training Queue', projectName: 'Training Queue' }];
 
-      expect(await findPhases('3870')).toStrictEqual(phases);
+      expect(await findPhases(3870)).toStrictEqual(phases);
     });
   });
 
