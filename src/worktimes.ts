@@ -6,23 +6,8 @@ import jsonpath from 'jsonpath';
 import { printTable } from 'console-table-printer';
 
 import { get, post, put } from './api';
+import { getCurrentPhases } from './phases';
 import { getWeekdays } from './utils';
-
-const getCurrentPhases = async () => {
-  const projects = await get('projects?active=true&userHasAccess=true');
-  const favorites: any = await get('preferences/favoritePhases');
-
-  const currentPhases = jsonpath.query(
-    projects,
-    `$..phases[?(${favorites.favoritePhases.map((p: number) => `@.id == ${p}`).join('||')})]`,
-  );
-  /*
-  const currentProjects = projects.filter((project) => {
-    return project.phases.find(phase => favorites.favoritePhases.includes(phase.id));
-  });
-  */
-  return currentPhases;
-};
 
 const getWorktimes = async (dt?: string) => {
   dayjs.extend(isoWeek);
@@ -31,7 +16,11 @@ const getWorktimes = async (dt?: string) => {
   const weekly = await get(`worktimes/weekly?year=${date.format('YYYY')}&week=${date.isoWeek()}`);
 
   return weekly.worktimes.map((w: any) => ({
-    id: w.id, phaseId: w.task.phaseId, taskId: w.taskId, date: w.date, duration: w.duration,
+    id: w.id,
+    phaseId: w.task.phaseId,
+    taskId: w.taskId,
+    date: w.date,
+    duration: w.duration,
   }));
 };
 
@@ -47,24 +36,20 @@ const getDefaultTaskFor = async (phaseId: string) => {
   return {};
 };
 
-export const listPhases = async () => {
-  const phases = await getCurrentPhases();
-
-  printTable(phases.map((p) => ({id: p.id, name: p.name})));
-};
-
 export const listWeek = async () => {
   const weekdays = getWeekdays();
 
   const worktimes = await getWorktimes();
   const phases = await getCurrentPhases();
 
-  const phasesForDays = phases.map(phase => {
-    const phaseWeek: { [name: string]: string } = { 'Name': phase.name };
-    weekdays.forEach(day => {
-      const worktime = worktimes.find((w: any) => (w.date === day.date && w.phaseId === phase.id));
+  const phasesForDays = phases.map((phase: any) => {
+    const phaseWeek: { [name: string]: string } = {
+      Name: phase.projectName === phase.name ? phase.name : `${phase.projectName} (${phase.name})`,
+    };
+    weekdays.forEach((day) => {
+      const worktime = worktimes.find((w: any) => w.date === day.date && w.phaseId === phase.id);
       if (worktime) {
-        phaseWeek[day.name] = worktime.duration || 0;
+        phaseWeek[day.name] = worktime.duration || 0;
       } else {
         phaseWeek[day.name] = '';
       }
@@ -81,7 +66,7 @@ export const createWorktime = async (argv: any) => {
 
   const worktimes = await getWorktimes(argv.date);
 
-  const worktime = worktimes.find((w: any) => (w.date === date && w.phaseId === argv.id));
+  const worktime = worktimes.find((w: any) => w.date === date && w.phaseId === argv.id);
 
   if (!date || !task.id) {
     console.log('Creating worktime failed. Please check your parameters.');
@@ -99,7 +84,6 @@ export const createWorktime = async (argv: any) => {
       });
 
       console.log(`Updated worktime for ${date}`);
-
     } else {
       await post('worktimes', {
         date,

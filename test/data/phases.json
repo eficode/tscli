@@ -1,0 +1,30 @@
+{
+  "favorites": { "favoritePhases": [ 3448, 2134 ] },
+  "projects": [{
+    "id": 2759,
+    "name": "Transformation Work Group (Internal)",
+    "phases": [
+      {
+        "id": 3448,
+        "name": "Transformation Work Group (Internal)",
+        "tasks": [
+          { "id": 11108, "name": "Overtime", "phaseId": 3448 },
+          { "id": 11106, "name": "No task", "phaseId": 3448 }
+        ]
+      }
+    ]
+  }, {
+    "id": 2952,
+    "name": "Training Queue",
+    "phases": [
+      {
+        "id": 3870,
+        "name": "Training Queue",
+        "tasks": [
+          { "id": 12308, "name": "Overtime", "phaseId": 3448 },
+          { "id": 12306, "name": "No task", "phaseId": 3448 }
+        ]
+      }
+    ]
+  }]
+}

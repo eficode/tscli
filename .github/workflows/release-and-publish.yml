@@ -11,7 +11,9 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
       - run: npm ci
       - run: npm test
       - run: npm run lint
@@ -21,7 +23,9 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
       - run: echo "::set-output name=version::$(node -p -e "require('./package.json').version")"
         id: version
       - name: release
@@ -41,8 +45,9 @@ jobs:
     needs: release
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
         with:
+          node-version: '16'
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
       - run: npm publish --access public
