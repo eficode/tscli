@@ -25,9 +25,11 @@ describe('Projects', () => {
     it('should return projects with a keyword', async () => {
       mocked(get as jest.Mock).mockResolvedValueOnce(testData.projects);
 
-      const foundProjects = [{ id: 3448, name: 'Transformation Work Group (Internal)', projectName: 'Transformation Work Group (Internal)' }];
+      const projects = [
+        { id: 3448, name: 'Transformation Work Group (Internal)', projectName: 'Transformation Work Group (Internal)' },
+      ];
 
-      expect(await searchProjects('nsforma')).toStrictEqual(foundProjects);
+      expect(await searchProjects('nsforma')).toStrictEqual(projects);
     });
   });
 });

@@ -7,10 +7,10 @@ export const findPhases = async (id: string) => {
 
   const phases = projects
     .map((project: any) => {
-      const phases = project.phases.filter((phase: any) => (phase.id == id));
+      const filteredPhases = project.phases.filter((phase: any) => id === phase.id.toString());
 
-      if (phases) {
-        return phases.map((phase: any) => ({ id: phase.id, name: phase.name, projectName: project.name }));
+      if (filteredPhases) {
+        return filteredPhases.map((phase: any) => ({ id: phase.id, name: phase.name, projectName: project.name }));
       }
 
       return null;

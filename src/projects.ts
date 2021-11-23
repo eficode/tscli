@@ -13,10 +13,9 @@ export const searchProjects = async (keyword: any) => {
 
   const found = projects
     .map((project: any) => {
-      var regex = new RegExp(keyword, 'i');
+      const regex = new RegExp(keyword, 'i');
 
-      const phases = project.phases
-        .filter((phase: any) => (project.name.match(regex) || phase.name.match(regex)));
+      const phases = project.phases.filter((phase: any) => project.name.match(regex) || phase.name.match(regex));
 
       if (phases) {
         return phases.map((phase: any) => ({ id: phase.id, name: phase.name, projectName: project.name }));
