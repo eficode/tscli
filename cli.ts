@@ -11,7 +11,7 @@ const args = yargs(process.argv.slice(2))
   .help('h')
   .command('$0', 'List hours of current week', {}, listWeek)
   .command('tasks', 'Get current tasks', {}, listPhases)
-  .command('create <id> <duration> [date] [description]', 'mark hours for task', {}, createWorktime)
+  .command('add <id> <duration> [date] [description]', 'mark hours for task', {}, createWorktime)
   .demandCommand()
   .alias('h', 'help')
   .alias('v', 'version').argv;
