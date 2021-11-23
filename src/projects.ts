@@ -4,7 +4,7 @@ import { get, put } from './api';
 
 import { findPhases, getPhaseIds, getCurrentPhases } from '../src/phases';
 
-const searchProjects = async (keyword: any) => {
+export const searchProjects = async (keyword: any) => {
   if (!keyword) {
     return [];
   }
@@ -63,7 +63,7 @@ const removeFavorite = async (id: any) => {
 export const findProjectsAndTasks = async (argv: any) => {
   if (!argv.name) {
     console.log('Please provide a project or tasks name to search for');
-    return [];
+    return;
   }
 
   const projects = await searchProjects(argv.name);

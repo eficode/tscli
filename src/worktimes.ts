@@ -24,13 +24,15 @@ const getWorktimes = async (dt?: string) => {
   }));
 };
 
-const getDefaultTaskFor = async (phaseId: string) => {
-  const projects = await get('projects?active=true&userHasAccess=true');
+export const getDefaultTaskFor = async (phaseId: string) => {
+  if (phaseId) {
+    const projects = await get('projects?active=true&userHasAccess=true');
 
-  const defaultTasks = jsonpath.query(projects, `$..phases[?(@.id==${phaseId})].tasks[?(@.name=='No task')]`);
+    const defaultTasks = jsonpath.query(projects, `$..phases[?(@.id==${phaseId})].tasks[?(@.name=='No task')]`);
 
-  if (defaultTasks && defaultTasks.length > 0) {
-    return defaultTasks[0];
+    if (defaultTasks && defaultTasks.length > 0) {
+      return defaultTasks[0];
+    }
   }
 
   return {};
