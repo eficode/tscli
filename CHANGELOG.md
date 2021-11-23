@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/eficode/tscli/compare/v0.0.3...v0.0.4) (2021-11-23)
+
+
+### Features
+
+* **test:** add auth tests with mocking ([8eb7295](https://github.com/eficode/tscli/commit/8eb7295afd346434453b871473107e3b41bf0a35))
+* **test:** add tests for phases ([b41bdfe](https://github.com/eficode/tscli/commit/b41bdfee3f236462a35eaae8684a63d4e58de3ca))
+* **test:** add tests for phases ([4375ac6](https://github.com/eficode/tscli/commit/4375ac6a305b70c8e3aa4a9a35e5afd0aade4842))
+
+
+### Bug Fixes
+
+* **app:** remove backend as unnecessary ([2d72845](https://github.com/eficode/tscli/commit/2d7284592165895c8e820d4120f274b3d96a9260))
+* **app:** remove logging ([f435fe5](https://github.com/eficode/tscli/commit/f435fe50af3e09d7cbb7a7a486557454384cd6ba))
+* **ci:** fix typo in config ([282a217](https://github.com/eficode/tscli/commit/282a217f7195d3d4ac695e75adc1f58621e34311))
+* **ci:** update node version ([7a108d3](https://github.com/eficode/tscli/commit/7a108d3928dac74a9f94f6a336f388bee005c7a3))
+* **readme:** update readme ([9295a3f](https://github.com/eficode/tscli/commit/9295a3f83d9419695e69ad5c5aed1ceb7d57cac6))
+
 ### [0.0.3](https://github.com/eficode/tscli/compare/v0.0.2...v0.0.3) (2021-11-22)
 
 
