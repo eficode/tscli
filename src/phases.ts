@@ -2,6 +2,25 @@ import { printTable } from 'console-table-printer';
 
 import { get } from './api';
 
+export const findPhases = async (id: string) => {
+  const projects = await get('projects?active=true&userHasAccess=true');
+
+  const phases = projects
+    .map((project: any) => {
+      const phases = project.phases.filter((phase: any) => (phase.id == id));
+
+      if (phases) {
+        return phases.map((phase: any) => ({ id: phase.id, name: phase.name, projectName: project.name }));
+      }
+
+      return null;
+    })
+    .filter((x: any) => x)
+    .flat();
+
+  return phases;
+};
+
 export const getCurrentPhases = async () => {
   const projects = await get('projects?active=true&userHasAccess=true');
   const favorites: any = await get('preferences/favoritePhases');
@@ -24,10 +43,14 @@ export const getCurrentPhases = async () => {
   return currentPhases;
 };
 
+export const getPhaseIds = (phases: any) => {
+  return phases.map((phase: any) => phase.id);
+};
+
 export const listPhases = async () => {
   const phases = await getCurrentPhases();
 
   printTable(
-    phases.map((p: any) => ({ Id: p.id, Name: p.projectName === p.name ? p.name : `${p.projectName} (${p.name})` })),
+    phases.map((p: any) => ({ Name: p.projectName === p.name ? p.name : `${p.projectName} (${p.name})`, Id: p.id })),
   );
 };

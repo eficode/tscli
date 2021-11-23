@@ -45,6 +45,7 @@ export const listWeek = async () => {
   const phasesForDays = phases.map((phase: any) => {
     const phaseWeek: { [name: string]: string } = {
       Name: phase.projectName === phase.name ? phase.name : `${phase.projectName} (${phase.name})`,
+      Id: phase.id,
     };
     weekdays.forEach((day) => {
       const worktime = worktimes.find((w: any) => w.date === day.date && w.phaseId === phase.id);

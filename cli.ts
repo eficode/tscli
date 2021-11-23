@@ -3,6 +3,7 @@
 import yargs from 'yargs';
 
 import { listPhases } from './src/phases';
+import { findProjectsAndTasks, changeFavorite } from './src/projects';
 import { listWeek, createWorktime } from './src/worktimes';
 
 const args = yargs(process.argv.slice(2))
@@ -11,7 +12,9 @@ const args = yargs(process.argv.slice(2))
   .help('h')
   .command('$0', 'List hours of current week', {}, listWeek)
   .command('tasks', 'Get current tasks', {}, listPhases)
-  .command('add <id> <duration> [date] [description]', 'mark hours for task', {}, createWorktime)
+  .command('hours <id> <duration> [date] [description]', 'mark hours for task', {}, createWorktime)
+  .command('find <name>', 'find project and tasks by name', {}, findProjectsAndTasks)
+  .command('favorites <action> <id>', 'add / remove a favorite', {}, changeFavorite)
   .demandCommand()
   .alias('h', 'help')
   .alias('v', 'version').argv;
