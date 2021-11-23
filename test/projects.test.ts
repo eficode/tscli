@@ -13,7 +13,7 @@ describe('Projects', () => {
       mocked(get as jest.Mock)
         .mockResolvedValueOnce(testData.projects)
 
-      expect(await findProjectsAndTasks()).toStrictEqual([]);
+      expect(await findProjectsAndTasks({ name: null })).toStrictEqual([]);
     });
   });
 });

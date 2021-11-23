@@ -63,6 +63,7 @@ const removeFavorite = async (id: any) => {
 export const findProjectsAndTasks = async (argv: any) => {
   if (!argv.name) {
     console.log('Please provide a project or tasks name to search for');
+    return [];
   }
 
   const projects = await searchProjects(argv.name);
