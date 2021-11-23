@@ -6,9 +6,6 @@ export const getCurrentPhases = async () => {
   const projects = await get('projects?active=true&userHasAccess=true');
   const favorites: any = await get('preferences/favoritePhases');
 
-  console.log(projects);
-  console.log(favorites);
-
   const currentPhases = projects
     .map((project: any) => {
       const phases = project.phases
