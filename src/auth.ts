@@ -1,7 +1,7 @@
 import * as os from 'os';
 import { existsSync, promises as fs } from 'fs';
 
-import { testAuth } from './api';
+import { testAuth, ENDPOINT } from './api';
 import { getCookiesFromBrowser } from './cookies';
 
 const createSessionDirectoryIfMissing = async () => {
@@ -14,16 +14,26 @@ const createSessionDirectoryIfMissing = async () => {
   return dir;
 };
 
-const testCurrentSession = async (cookies: string) => {
+const testCurrentSession = async (cookies: any) => {
   try {
     await testAuth(cookies);
     return true;
   } catch (err) {
+    console.log('Current session failed, refreshing cookie information...');
     return false;
   }
 };
 
-export const getCurrentCookieFrom = async (filename: string) => {
+const failSessionIfError = async (cookies: any) => {
+  try {
+    await testAuth(cookies);
+  } catch (err) {
+    console.log(`Authentication failed. Please login to ${ENDPOINT} and try again.`);
+    process.exit(1);
+  }
+};
+
+export const getCurrentCookiesFrom = async (filename: string) => {
   if (existsSync(filename)) {
     const content = await fs.readFile(filename, 'utf8');
 
@@ -33,11 +43,9 @@ export const getCurrentCookieFrom = async (filename: string) => {
   return null;
 };
 
-const collectAndSaveCookieTo = async (filename: string) => {
-  const cookies: any = await getCookiesFromBrowser();
-
+const saveCookieTo = async (filename: string, cookies: any) => {
   const content = Object.keys(cookies)
-    .map((key) => `${key}=${cookies[key]}`)
+    .map((key: any) => `${key}=${cookies[key]}`)
     .join('; ');
 
   await fs.writeFile(filename, content);
@@ -45,17 +53,21 @@ const collectAndSaveCookieTo = async (filename: string) => {
   return content;
 };
 
-export const getSessionCookie = async () => {
+export const getSessionCookies = async () => {
   const sessionDir = await createSessionDirectoryIfMissing();
   const sessionFile = `${sessionDir}/.session`;
 
-  const cookie = await getCurrentCookieFrom(sessionFile);
+  const cookies = await getCurrentCookiesFrom(sessionFile);
 
-  if (cookie) {
-    if (await testCurrentSession(cookie)) {
-      return cookie;
+  if (cookies) {
+    if (await testCurrentSession(cookies)) {
+      return cookies;
     }
   }
 
-  return collectAndSaveCookieTo(sessionFile);
+  const newCookies = await getCookiesFromBrowser();
+
+  await failSessionIfError(newCookies);
+
+  return saveCookieTo(sessionFile, newCookies);
 };
