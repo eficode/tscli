@@ -24,13 +24,15 @@ const getWorktimes = async (dt?: string) => {
   }));
 };
 
-const getDefaultTaskFor = async (phaseId: string) => {
-  const projects = await get('projects?active=true&userHasAccess=true');
+export const getDefaultTaskFor = async (phaseId: string) => {
+  if (phaseId) {
+    const projects = await get('projects?active=true&userHasAccess=true');
 
-  const defaultTasks = jsonpath.query(projects, `$..phases[?(@.id==${phaseId})].tasks[?(@.name=='No task')]`);
+    const defaultTasks = jsonpath.query(projects, `$..phases[?(@.id==${phaseId})].tasks[?(@.name=='No task')]`);
 
-  if (defaultTasks && defaultTasks.length > 0) {
-    return defaultTasks[0];
+    if (defaultTasks && defaultTasks.length > 0) {
+      return defaultTasks[0];
+    }
   }
 
   return {};
@@ -45,6 +47,7 @@ export const listWeek = async () => {
   const phasesForDays = phases.map((phase: any) => {
     const phaseWeek: { [name: string]: string } = {
       Name: phase.projectName === phase.name ? phase.name : `${phase.projectName} (${phase.name})`,
+      Id: phase.id,
     };
     weekdays.forEach((day) => {
       const worktime = worktimes.find((w: any) => w.date === day.date && w.phaseId === phase.id);
