@@ -13,6 +13,7 @@ const getWorktimes = async (dt?: string) => {
   dayjs.extend(isoWeek);
 
   const date = dayjs(dt);
+
   const weekly = await get(`worktimes/weekly?year=${date.format('YYYY')}&week=${date.isoWeek()}`);
 
   return weekly.worktimes.map((w: any) => ({

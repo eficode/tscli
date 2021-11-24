@@ -1,8 +1,10 @@
 import * as os from 'os';
 import { existsSync, promises as fs } from 'fs';
 
-import { testAuth, ENDPOINT } from './api';
+import { testAuth } from './api';
 import { getCookiesFromBrowser } from './cookies';
+
+export const HOMEPAGE = process.env.HOMEPAGE || 'https://timesheets.eficode.fi';
 
 const createSessionDirectoryIfMissing = async () => {
   const dir = `${os.homedir()}/.tscli`;
@@ -28,7 +30,7 @@ const failSessionIfError = async (cookies: any) => {
   try {
     await testAuth(cookies);
   } catch (err) {
-    console.log(`Authentication failed. Please login to ${ENDPOINT} and try again.`);
+    console.log(`Authentication failed. Please login to ${HOMEPAGE} and try again.`);
     process.exit(1);
   }
 };
@@ -43,14 +45,10 @@ export const getCurrentCookiesFrom = async (filename: string) => {
   return null;
 };
 
-const saveCookieTo = async (filename: string, cookies: any) => {
-  const content = Object.keys(cookies)
-    .map((key: any) => `${key}=${cookies[key]}`)
-    .join('; ');
+const saveCookiesTo = async (filename: string, cookies: any) => {
+  await fs.writeFile(filename, cookies);
 
-  await fs.writeFile(filename, content);
-
-  return content;
+  return cookies;
 };
 
 export const getSessionCookies = async () => {
@@ -67,7 +65,8 @@ export const getSessionCookies = async () => {
 
   const newCookies = await getCookiesFromBrowser();
 
+  await saveCookiesTo(sessionFile, newCookies);
   await failSessionIfError(newCookies);
 
-  return saveCookieTo(sessionFile, newCookies);
+  return newCookies;
 };

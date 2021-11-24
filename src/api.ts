@@ -9,25 +9,25 @@ const handleFetch = async (url: string, params: any = {}) => {
     const cookie = await getSessionCookies();
 
     const opts = {
-      header: {
+      headers: {
         cookie,
         'content-Type': 'application/json;charset=UTF-8',
       },
     };
 
-    const response = await fetch(`${ENDPOINT}/${url}`, { ...opts, ...params });
+    const response = await fetch(url, { ...opts, ...params });
 
     return response.json();
   } catch (err) {
     console.log(err);
-    throw new Error('oops');
+    throw new Error(`There was an error fetching resource ${url}`);
   }
 };
 
 export const testAuth = async (cookie: any) => {
   const opts = { headers: { cookie } };
 
-  const response = await fetch(`${ENDPOINT}/me`, opts);
+  const response = await fetch(`${ENDPOINT}/employees/me`, opts);
   return response.json();
 };
 
