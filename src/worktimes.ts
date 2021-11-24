@@ -24,25 +24,8 @@ const getWorktimes = async (dt?: string) => {
   }));
 };
 
-export const getDefaultTaskFor = async (phaseId: string) => {
-  if (phaseId) {
-    const projects = await get('projects?active=true&userHasAccess=true');
-
-    const defaultTasks = jsonpath.query(projects, `$..phases[?(@.id==${phaseId})].tasks[?(@.name=='No task')]`);
-
-    if (defaultTasks && defaultTasks.length > 0) {
-      return defaultTasks[0];
-    }
-  }
-
-  return {};
-};
-
-export const listWeek = async () => {
+const getPhasesForDays = (phases: any, worktimes: any) => {
   const weekdays = getWeekdays();
-
-  const worktimes = await getWorktimes();
-  const phases = await getCurrentPhases();
 
   const phasesForDays = phases.map((phase: any) => {
     const phaseWeek: { [name: string]: string } = {
@@ -60,7 +43,35 @@ export const listWeek = async () => {
     return phaseWeek;
   });
 
-  printTable(phasesForDays);
+  return phasesForDays;
+};
+
+export const getDefaultTaskFor = async (phaseId: string) => {
+  if (phaseId) {
+    const projects = await get('projects?active=true&userHasAccess=true');
+
+    const defaultTasks = jsonpath.query(projects, `$..phases[?(@.id==${phaseId})].tasks[?(@.name=='No task')]`);
+
+    if (defaultTasks && defaultTasks.length > 0) {
+      return defaultTasks[0];
+    }
+  }
+
+  return {};
+};
+
+export const listWeek = async () => {
+  try {
+    const worktimes = await getWorktimes();
+    const phases = await getCurrentPhases();
+
+    const phasesForDays = await getPhasesForDays(phases, worktimes);
+
+    printTable(phasesForDays);
+  } catch (err) {
+    console.error(err);
+    process.exit(1);
+  }
 };
 
 export const createWorktime = async (argv: any) => {
