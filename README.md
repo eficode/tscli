@@ -16,4 +16,4 @@ Sign in to [Timesheets](https://timesheets.eficode.fi/) on Chrome.
 
 ### Adding an hour report
 
-`npx @eficode/tscli create <id> <duration>`
+`npx @eficode/tscli add <id> <duration>`
