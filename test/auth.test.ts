@@ -1,4 +1,5 @@
 import { mocked } from 'ts-jest/utils';
+
 import { existsSync, promises } from 'fs';
 
 import { getSessionCookies, getCurrentCookiesFrom } from '../src/auth';
@@ -10,7 +11,7 @@ jest.mock('../src/api', () => ({
 }));
 
 jest.mock('../src/cookies', () => ({
-  getCookiesFromBrowser: jest.fn().mockResolvedValue({ sessionCookie: 'new-session-key' }),
+  getCookiesFromBrowser: jest.fn().mockResolvedValue('sessionCookie=chrome-session-key'),
 }));
 
 describe('Auth', () => {
@@ -42,7 +43,7 @@ describe('Auth', () => {
         .mockReturnValueOnce(true)
         .mockReturnValueOnce(false);
 
-      expect(await getSessionCookies()).toBe('sessionCookie=new-session-key');
+      expect(await getSessionCookies()).toBe('sessionCookie=chrome-session-key');
     });
   });
 });
