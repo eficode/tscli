@@ -1,6 +1,6 @@
 {
   "name": "@eficode/tscli",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": "Marko Klemetti",
   "license": "MIT",
   "repository": {
@@ -25,7 +25,7 @@
     "build": "tsc",
     "release": "./node_modules/.bin/standard-version && git push --follow-tags",
     "test": "jest",
-    "format": "prettier --write \"**/*.ts\"",
+    "format": "prettier --write **/*.ts",
     "lint": "tslint -p tsconfig.json"
   },
   "jest": {

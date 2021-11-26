@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/eficode/tscli/compare/v0.0.4...v0.0.5) (2021-11-26)
+
+
+### Features
+
+* **app:** add and remove favorites ([5ff4f39](https://github.com/eficode/tscli/commit/5ff4f39279ea768c03999d91df8ac7e60e33feb0))
+* **app:** add error handling ([6f64092](https://github.com/eficode/tscli/commit/6f64092e8b270d8a4a7e72c165b15086c290516c))
+* **app:** add error handling to listing week ([7999cb0](https://github.com/eficode/tscli/commit/7999cb0423739cbc5ddcdca1f05b70cf847885b7))
+* **app:** change adding hours from 'create' to 'app' ([44a3eff](https://github.com/eficode/tscli/commit/44a3eff4e9c63d6700a8531195dedb79e246c021))
+* **app:** combine fetch and error handling to one function ([f41cc94](https://github.com/eficode/tscli/commit/f41cc944030e521c482a3d88335a3fa67e989179))
+* **test:** add tests for phases and projects ([d94f21a](https://github.com/eficode/tscli/commit/d94f21aa1ff1e1ba1c607090c9e2a164a444b26c))
+* **test:** add tests for projects and worktimes ([6f2a947](https://github.com/eficode/tscli/commit/6f2a9478e8a1e710e6d2cd1c944b418ba12edf81))
+
+
+### Bug Fixes
+
+* **app:** correct using cookies in fetch headers ([d090512](https://github.com/eficode/tscli/commit/d090512981c24589d734ca29edda29c9b5484640))
+* **test:** fix adding and removing favorites ([b944708](https://github.com/eficode/tscli/commit/b944708eae57a0a56b55819405ab70a1afc0d0f9))
+* **test:** test projects not found ([a5a77a8](https://github.com/eficode/tscli/commit/a5a77a8294ba72d7ae58ccf6648baa0aee78b2d8))
+* **test:** update mock cookies fetched from browser ([0009e71](https://github.com/eficode/tscli/commit/0009e716c831f15777c03b4890fd8bdbd5c9dfad))
+
 ### [0.0.4](https://github.com/eficode/tscli/compare/v0.0.3...v0.0.4) (2021-11-23)
 
 
