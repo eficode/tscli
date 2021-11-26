@@ -1,55 +1,43 @@
 import fetch from 'node-fetch';
 
-import { getSessionCookie } from './auth';
+import { getSessionCookies } from './auth';
 
-const ENDPOINT = process.env.ENDPOINT || 'https://timesheets.eficode.fi/api';
+export const ENDPOINT = process.env.ENDPOINT || 'https://timesheets.eficode.fi/api';
 
-export const testAuth = async (cookie: string) => {
+const handleFetch = async (url: string, params: any = {}) => {
+  try {
+    const cookie = await getSessionCookies();
+
+    const opts = {
+      headers: {
+        cookie,
+        'content-Type': 'application/json;charset=UTF-8',
+      },
+    };
+
+    const response = await fetch(url, { ...opts, ...params });
+
+    return response.json();
+  } catch (err) {
+    throw new Error(`There was an error fetching resource ${url}`);
+  }
+};
+
+export const testAuth = async (cookie: any) => {
   const opts = { headers: { cookie } };
 
-  const response = await fetch(`${ENDPOINT}/me`, opts);
+  const response = await fetch(`${ENDPOINT}/employees/me`, opts);
   return response.json();
 };
 
 export const get = async (url: string) => {
-  const cookie = await getSessionCookie();
-
-  const opts = { headers: { cookie } };
-
-  const response = await fetch(`${ENDPOINT}/${url}`, opts);
-  return response.json();
+  return handleFetch(`${ENDPOINT}/${url}`);
 };
 
 export const post = async (url: string, params: any) => {
-  const cookie = await getSessionCookie();
-
-  const headers = {
-    cookie,
-    'content-Type': 'application/json;charset=UTF-8',
-  };
-
-  const response = await fetch(`${ENDPOINT}/${url}`, {
-    headers,
-    method: 'POST',
-    body: JSON.stringify(params),
-  });
-
-  return response.json();
+  return handleFetch(url, { method: 'POST', body: JSON.stringify(params) });
 };
 
 export const put = async (url: string, params: any) => {
-  const cookie = await getSessionCookie();
-
-  const headers = {
-    cookie,
-    'content-Type': 'application/json;charset=UTF-8',
-  };
-
-  const response = await fetch(`${ENDPOINT}/${url}`, {
-    headers,
-    method: 'PUT',
-    body: JSON.stringify(params),
-  });
-
-  return response.json();
+  return handleFetch(url, { method: 'PUT', body: JSON.stringify(params) });
 };

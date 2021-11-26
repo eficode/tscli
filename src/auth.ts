@@ -4,6 +4,8 @@ import { existsSync, promises as fs } from 'fs';
 import { testAuth } from './api';
 import { getCookiesFromBrowser } from './cookies';
 
+export const HOMEPAGE = process.env.HOMEPAGE || 'https://timesheets.eficode.fi';
+
 const createSessionDirectoryIfMissing = async () => {
   const dir = `${os.homedir()}/.tscli`;
 
@@ -14,16 +16,26 @@ const createSessionDirectoryIfMissing = async () => {
   return dir;
 };
 
-const testCurrentSession = async (cookies: string) => {
+const testCurrentSession = async (cookies: any) => {
   try {
     await testAuth(cookies);
     return true;
   } catch (err) {
+    console.log('Current session failed, refreshing cookie information...');
     return false;
   }
 };
 
-export const getCurrentCookieFrom = async (filename: string) => {
+const failSessionIfError = async (cookies: any) => {
+  try {
+    await testAuth(cookies);
+  } catch (err) {
+    console.log(`Authentication failed. Please login to ${HOMEPAGE} and try again.`);
+    process.exit(1);
+  }
+};
+
+export const getCurrentCookiesFrom = async (filename: string) => {
   if (existsSync(filename)) {
     const content = await fs.readFile(filename, 'utf8');
 
@@ -33,29 +45,28 @@ export const getCurrentCookieFrom = async (filename: string) => {
   return null;
 };
 
-const collectAndSaveCookieTo = async (filename: string) => {
-  const cookies: any = await getCookiesFromBrowser();
+const saveCookiesTo = async (filename: string, cookies: any) => {
+  await fs.writeFile(filename, cookies);
 
-  const content = Object.keys(cookies)
-    .map((key) => `${key}=${cookies[key]}`)
-    .join('; ');
-
-  await fs.writeFile(filename, content);
-
-  return content;
+  return cookies;
 };
 
-export const getSessionCookie = async () => {
+export const getSessionCookies = async () => {
   const sessionDir = await createSessionDirectoryIfMissing();
   const sessionFile = `${sessionDir}/.session`;
 
-  const cookie = await getCurrentCookieFrom(sessionFile);
+  const cookies = await getCurrentCookiesFrom(sessionFile);
 
-  if (cookie) {
-    if (await testCurrentSession(cookie)) {
-      return cookie;
+  if (cookies) {
+    if (await testCurrentSession(cookies)) {
+      return cookies;
     }
   }
 
-  return collectAndSaveCookieTo(sessionFile);
+  const newCookies = await getCookiesFromBrowser();
+
+  await saveCookiesTo(sessionFile, newCookies);
+  await failSessionIfError(newCookies);
+
+  return newCookies;
 };
