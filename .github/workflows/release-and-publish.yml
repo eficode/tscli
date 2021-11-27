@@ -14,6 +14,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
+          cache: 'npm'
       - run: npm ci
       - run: npm test
       - run: npm run lint
@@ -26,6 +27,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
+          cache: 'npm'
       - run: echo "::set-output name=version::$(node -p -e "require('./package.json').version")"
         id: version
       - name: release
@@ -48,6 +50,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
+          cache: 'npm'
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
       - run: npm publish --access public
