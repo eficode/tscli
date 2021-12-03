@@ -7,4 +7,4 @@ RUN npm ci
 
 COPY lib/ /app
 
-CMD [ "node", "cli.js" ]
+ENTRYPOINT [ "node", "cli.js" ]
