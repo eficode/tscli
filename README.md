@@ -17,3 +17,15 @@ Sign in to [Timesheets](https://timesheets.eficode.fi/) on Chrome.
 ### Adding an hour report
 
 `npx @eficode/tscli add <id> <duration>`
+
+## Docker
+
+`docker build -t tscli .`
+
+### Running
+
+`docker run -it tscli tasks`
+
+### From dockerhub
+
+`docker run -it mrako/tscli tasks`
