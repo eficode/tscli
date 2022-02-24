@@ -11,7 +11,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3.0.0
         with:
           node-version: '16'
       - run: npm ci
@@ -23,7 +23,7 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3.0.0
         with:
           node-version: '16'
       - run: echo "::set-output name=version::$(node -p -e "require('./package.json').version")"
@@ -45,7 +45,7 @@ jobs:
     needs: release
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3.0.0
         with:
           node-version: '16'
           registry-url: 'https://registry.npmjs.org'
