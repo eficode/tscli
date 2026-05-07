@@ -22,6 +22,7 @@
     "prepare": "husky install && npm run build",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
+    "start": "tsc && node --env-file=.env lib/cli.js",
     "build": "tsc",
     "release": "./node_modules/.bin/standard-version && git push --follow-tags",
     "test": "jest",
