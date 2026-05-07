@@ -11,9 +11,10 @@ const combineCookieString = (data: any) => {
   return cookies;
 };
 
-const resolveProfile = (profileOrHint: string): string => {
+const resolveProfile = (profileOrHint?: string): string => {
   const chromeDir = path.join(os.homedir(), 'Library/Application Support/Google/Chrome');
   const dirs = readdirSync(chromeDir);
+  let eficodeProfile: string | undefined;
 
   for (const dir of dirs) {
     const prefsFile = path.join(chromeDir, dir, 'Preferences');
@@ -24,18 +25,22 @@ const resolveProfile = (profileOrHint: string): string => {
       const name: string = prefs?.profile?.name ?? '';
       const email: string = prefs?.account_info?.[0]?.email ?? '';
 
-      if (dir === profileOrHint || name === profileOrHint || email === profileOrHint) {
+      if (profileOrHint && (dir === profileOrHint || name === profileOrHint || email === profileOrHint)) {
         return dir;
+      }
+
+      if (!profileOrHint && email.endsWith('@eficode.com')) {
+        eficodeProfile = dir;
       }
     } catch {
       /* skip unreadable profiles */
     }
   }
 
-  return profileOrHint;
+  return eficodeProfile ?? profileOrHint ?? 'Default';
 };
 
-const CHROME_PROFILE = resolveProfile(process.env.CHROME_PROFILE || 'Default');
+const CHROME_PROFILE = resolveProfile(process.env.CHROME_PROFILE);
 
 export const getCookiesFromBrowser = async () => {
   return new Promise((resolve, reject) => {
