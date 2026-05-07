@@ -8,11 +8,11 @@
     "resolveJsonModule": true,
     "strict": true,
     "moduleResolution": "node",
-    "outDir": "./lib",
+    "outDir": "./lib"
   },
   "ts-node": {
     "files": true
   },
   "include": ["cli.ts", "src", "test"],
-  "exclude": ["node_modules", "test"]
+  "exclude": ["node_modules", "**/*.test.ts", "test"]
 }

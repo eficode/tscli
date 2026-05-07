@@ -25,8 +25,10 @@ const getChromeUserDataDir = (): string | undefined => {
   }
 };
 
-const resolveProfile = (profileOrHint?: string): string | undefined => {
-  const chromeDir = getChromeUserDataDir();
+export const resolveProfile = (
+  profileOrHint?: string,
+  chromeDir: string | undefined = getChromeUserDataDir(),
+): string | undefined => {
   if (!chromeDir || !existsSync(chromeDir)) return profileOrHint;
 
   let eficodeProfile: string | undefined;
