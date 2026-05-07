@@ -11,12 +11,27 @@ const combineCookieString = (data: any) => {
   return cookies;
 };
 
-const resolveProfile = (profileOrHint?: string): string => {
-  const chromeDir = path.join(os.homedir(), 'Library/Application Support/Google/Chrome');
-  const dirs = readdirSync(chromeDir);
+const getChromeUserDataDir = (): string | undefined => {
+  const home = os.homedir();
+  switch (process.platform) {
+    case 'darwin':
+      return path.join(home, 'Library/Application Support/Google/Chrome');
+    case 'linux':
+      return path.join(home, '.config/google-chrome');
+    case 'win32':
+      return path.join(process.env.LOCALAPPDATA ?? path.join(home, 'AppData/Local'), 'Google/Chrome/User Data');
+    default:
+      return undefined;
+  }
+};
+
+const resolveProfile = (profileOrHint?: string): string | undefined => {
+  const chromeDir = getChromeUserDataDir();
+  if (!chromeDir || !existsSync(chromeDir)) return profileOrHint;
+
   let eficodeProfile: string | undefined;
 
-  for (const dir of dirs) {
+  for (const dir of readdirSync(chromeDir)) {
     const prefsFile = path.join(chromeDir, dir, 'Preferences');
     if (!existsSync(prefsFile)) continue;
 
@@ -37,12 +52,11 @@ const resolveProfile = (profileOrHint?: string): string => {
     }
   }
 
-  return eficodeProfile ?? profileOrHint ?? 'Default';
+  return eficodeProfile ?? profileOrHint;
 };
 
-const CHROME_PROFILE = resolveProfile(process.env.CHROME_PROFILE);
-
 export const getCookiesFromBrowser = async () => {
+  const profile = resolveProfile(process.env.CHROME_PROFILE);
   return new Promise((resolve, reject) => {
     getCookies(
       'https://timesheets.eficode.fi',
@@ -54,7 +68,7 @@ export const getCookiesFromBrowser = async () => {
 
         resolve(combineCookieString(data));
       },
-      CHROME_PROFILE,
+      profile,
     );
   });
 };
