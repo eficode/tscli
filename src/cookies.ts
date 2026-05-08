@@ -48,6 +48,7 @@ export const resolveProfile = (
 
       if (!profileOrHint && email.endsWith('@eficode.com')) {
         eficodeProfile = dir;
+        break;
       }
     } catch {
       /* skip unreadable profiles */
