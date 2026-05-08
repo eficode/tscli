@@ -1,4 +1,4 @@
-import { mocked } from 'ts-jest/utils';
+import { mocked } from 'jest-mock';
 import { get } from '../src/api';
 
 import { getDefaultTaskFor, isWorktime, Worktime } from '../src/worktimes';

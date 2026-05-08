@@ -1,4 +1,4 @@
-import { mocked } from 'ts-jest/utils';
+import { mocked } from 'jest-mock';
 import { get } from '../src/api';
 
 import { findPhases, getCurrentPhases, isPhase, Phase } from '../src/phases';
@@ -53,103 +53,102 @@ describe('Phases', () => {
       // Arrange
       const phase: Phase = {
         id: 1,
-        name: "Phase name",
-        projectName: "Project name",
-      }
+        name: 'Phase name',
+        projectName: 'Project name',
+      };
 
       // Act
-      const isCorrectPhase = isPhase(phase)
+      const isCorrectPhase = isPhase(phase);
 
       // Assert
-      expect(isCorrectPhase).toBe(true)
-    })
+      expect(isCorrectPhase).toBe(true);
+    });
 
     it('should reject Phase objects missing the id-field', () => {
       // Arrange
-      const phase: Omit<Phase, "id"> = {
-        name: "Phase name",
-        projectName: "Project name",
-      }
+      const phase: Omit<Phase, 'id'> = {
+        name: 'Phase name',
+        projectName: 'Project name',
+      };
 
       // Act
-      const isCorrectPhase = isPhase(phase)
+      const isCorrectPhase = isPhase(phase);
 
       // Assert
-      expect(isCorrectPhase).toBe(false)
-    })
+      expect(isCorrectPhase).toBe(false);
+    });
 
     it('should reject Phase objects missing the name-field', () => {
       // Arrange
-      const phase: Omit<Phase, "name"> = {
+      const phase: Omit<Phase, 'name'> = {
         id: 1,
-        projectName: "Project name",
-      }
+        projectName: 'Project name',
+      };
 
       // Act
-      const isCorrectPhase = isPhase(phase)
+      const isCorrectPhase = isPhase(phase);
 
       // Assert
-      expect(isCorrectPhase).toBe(false)
-    })
+      expect(isCorrectPhase).toBe(false);
+    });
 
     it('should reject Phase objects missing the projectName-field', () => {
       // Arrange
-      const phase: Omit<Phase, "projectName"> = {
+      const phase: Omit<Phase, 'projectName'> = {
         id: 1,
-        name: "Phase name",
-      }
+        name: 'Phase name',
+      };
 
       // Act
-      const isCorrectPhase = isPhase(phase)
+      const isCorrectPhase = isPhase(phase);
 
       // Assert
-      expect(isCorrectPhase).toBe(false)
-    })
+      expect(isCorrectPhase).toBe(false);
+    });
 
     it('should reject Phase objects with not a number as the id', () => {
       // Arrange
-      const phase: Omit<Phase, "id"> & {id: any} = {
-        id: "1",
-        name: "Phase name",
-        projectName: "Project name",
-      }
+      const phase: Omit<Phase, 'id'> & { id: any } = {
+        id: '1',
+        name: 'Phase name',
+        projectName: 'Project name',
+      };
 
       // Act
-      const isCorrectPhase = isPhase(phase)
+      const isCorrectPhase = isPhase(phase);
 
       // Assert
-      expect(isCorrectPhase).toBe(false)
-    })
+      expect(isCorrectPhase).toBe(false);
+    });
 
     it('should reject Phase objects with not a string as the name', () => {
       // Arrange
-      const phase: Omit<Phase, "name"> & {name: any} = {
+      const phase: Omit<Phase, 'name'> & { name: any } = {
         id: 1,
         name: {},
-        projectName: "Project name",
-      }
+        projectName: 'Project name',
+      };
 
       // Act
-      const isCorrectPhase = isPhase(phase)
+      const isCorrectPhase = isPhase(phase);
 
       // Assert
-      expect(isCorrectPhase).toBe(false)
-    })
-
+      expect(isCorrectPhase).toBe(false);
+    });
 
     it('should reject Phase objects with not a string as the projectName', () => {
       // Arrange
-      const phase: Omit<Phase, "projectName"> & {projectName: any} = {
+      const phase: Omit<Phase, 'projectName'> & { projectName: any } = {
         id: 1,
-        name: "Name",
+        name: 'Name',
         projectName: null,
-      }
+      };
 
       // Act
-      const isCorrectPhase = isPhase(phase)
+      const isCorrectPhase = isPhase(phase);
 
       // Assert
-      expect(isCorrectPhase).toBe(false)
-    })
-  })
+      expect(isCorrectPhase).toBe(false);
+    });
+  });
 });
